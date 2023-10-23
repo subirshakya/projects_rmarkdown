@@ -2799,7 +2799,8 @@ peaks for chicken, mapped to the <em>bGalGal1.mat.broiler.GRCg7b</em>
 <p>We originally started with 116 fasta files comprising 43 unique
 tissues and treatments at different stages of chick development. We
 mapped them to the galgal7b genome. We omitted 15 fasta files (see
-bottom of table) leaving us with 101 fasta files of 36 tissue types.</p>
+bottom of table) due to quality of reads and problems with alaingments
+leaving us with 101 fasta files of 36 tissue types.</p>
 <table>
 <colgroup>
 <col width="30%" />
@@ -3870,12 +3871,6 @@ Genrich -t ./bams/SRR8492043.bam,./bams/SRR8492042.bam,./bams/SRR8492041.bam \
 Genrich -t ./bams/SRR8062752.bam,./bams/SRR8062751.bam,./bams/SRR8062750.bam,./bams/SRR8062749.bam \
 -o ./beds/non-neural_crest_8-10ss.bed -j -e NC_053523.1 -r
 
-Genrich -t ./bams/SRR8062748.bam,./bams/SRR8062747.bam,./bams/SRR8062746.bam,./bams/SRR8062745.bam \
--o ./beds/non-neural_crest_5-6ss.bed -j -e NC_053523.1 -r
-
-Genrich -t ./bams/SRR8062744.bam,./bams/SRR8062743.bam,./bams/SRR8062742.bam \
--o ./beds/neural_crest_8-10ss_FOXD3.bed -j -e NC_053523.1 -r
-
 Genrich -t ./bams/SRR8062741.bam,./bams/SRR8062740.bam \
 -o ./beds/epiblast_HH4.bed -j -e NC_053523.1 -r
 
@@ -3957,78 +3952,76 @@ dataset</h2>
 all files at once and added all the peaks that were unique to each of
 the specific tissue type.</p>
 <pre class="bash"><code>#bash
-bedtools intersect -v -a beds/all_qc.bed -b beds/cone_cell_e5_-.bed &gt; \
+bedtools intersect -v -b beds/all_qc.bed -a beds/cone_cell_e5_-.bed &gt; \
 beds_intersect/cone_cell_e5_-_intersect.bed
-bedtools intersect -v -a beds/all_qc.bed -b beds/retinal_cell_e5-6.bed &gt; \
+bedtools intersect -v -b beds/all_qc.bed -a beds/retinal_cell_e5-6.bed &gt; \
 beds_intersect/retinal_cell_e5-6_intersect.bed
-bedtools intersect -v -a beds/all_qc.bed -b beds/wing_bud_HH24.bed &gt; \
+bedtools intersect -v -b beds/all_qc.bed -a beds/wing_bud_HH24.bed &gt; \
 beds_intersect/wing_bud_HH24_intersect.bed
-bedtools intersect -v -a beds/all_qc.bed -b beds/wing_bud_HH22.bed &gt; \
+bedtools intersect -v -b beds/all_qc.bed -a beds/wing_bud_HH22.bed &gt; \
 beds_intersect/wing_bud_HH22_intersect.bed
-bedtools intersect -v -a beds/all_qc.bed -b beds/wing_bud_HH20.bed &gt; \
+bedtools intersect -v -b beds/all_qc.bed -a beds/wing_bud_HH20.bed &gt; \
 beds_intersect/wing_bud_HH20_intersect.bed
-bedtools intersect -v -a beds/all_qc.bed -b beds/limb_bud_HH24.bed &gt; \
+bedtools intersect -v -b beds/all_qc.bed -a beds/limb_bud_HH24.bed &gt; \
 beds_intersect/limb_bud_HH24_intersect.bed
-bedtools intersect -v -a beds/all_qc.bed -b beds/presomitic_mesoderm_HH14.bed &gt; \
+bedtools intersect -v -b beds/all_qc.bed -a beds/presomitic_mesoderm_HH14.bed &gt; \
 beds_intersect/presomitic_mesoderm_HH14_intersect.bed
-bedtools intersect -v -a beds/all_qc.bed -b beds/epithelial_somites_HH14.bed &gt; \
+bedtools intersect -v -b beds/all_qc.bed -a beds/epithelial_somites_HH14.bed &gt; \
 beds_intersect/epithelial_somites_HH14_intersect.bed
-bedtools intersect -v -a beds/all_qc.bed -b beds/hindlimb_HH18.bed &gt; \
+bedtools intersect -v -b beds/all_qc.bed -a beds/hindlimb_HH18.bed &gt; \
 beds_intersect/hindlimb_HH18_intersect.bed
-bedtools intersect -v -a beds/all_qc.bed -b beds/forelimb_HH18.bed &gt; \
+bedtools intersect -v -b beds/all_qc.bed -a beds/forelimb_HH18.bed &gt; \
 beds_intersect/forelimb_HH18_intersect.bed
-bedtools intersect -v -a beds/all_qc.bed -b beds/flank_HH18.bed &gt; \
+bedtools intersect -v -b beds/all_qc.bed -a beds/flank_HH18.bed &gt; \
 beds_intersect/flank_HH18_intersect.bed
-bedtools intersect -v -a beds/all_qc.bed -b beds/neural_crest_HH9.bed &gt; \
+bedtools intersect -v -b beds/all_qc.bed -a beds/neural_crest_HH9.bed &gt; \
 beds_intersect/neural_crest_HH9_intersect.bed
-bedtools intersect -v -a beds/all_qc.bed -b beds/neural_crest_HH6.bed &gt; \
+bedtools intersect -v -b beds/all_qc.bed -a beds/neural_crest_HH6.bed &gt; \
 beds_intersect/neural_crest_HH6_intersect.bed
-bedtools intersect -v -a beds/all_qc.bed -b beds/negative_control_NC2-_E2-_HH25.bed &gt; \
+bedtools intersect -v -b beds/all_qc.bed -a beds/negative_control_NC2-_E2-_HH25.bed &gt; \
 beds_intersect/negative_control_NC2-_E2-_HH25_intersect.bed
-bedtools intersect -v -a beds/all_qc.bed -b beds/neural_crest_NC2-_HH25.bed &gt; \
+bedtools intersect -v -b beds/all_qc.bed -a beds/neural_crest_NC2-_HH25.bed &gt; \
 beds_intersect/neural_crest_NC2-_HH25_intersect.bed
-bedtools intersect -v -a beds/all_qc.bed -b beds/neural_crest_NC2+_HH25.bed &gt; \
+bedtools intersect -v -b beds/all_qc.bed -a beds/neural_crest_NC2+_HH25.bed &gt; \
 beds_intersect/neural_crest_NC2+_HH25_intersect.bed
-bedtools intersect -v -a beds/all_qc.bed -b beds/negative_control_NC2-_E2-_HH18.bed &gt; \
+bedtools intersect -v -b beds/all_qc.bed -a beds/negative_control_NC2-_E2-_HH18.bed &gt; \
 beds_intersect/negative_control_NC2-_E2-_HH18_intersect.bed
-bedtools intersect -v -a beds/all_qc.bed -b beds/neural_crest_NC2-_E2+_HH18.bed &gt; \
+bedtools intersect -v -b beds/all_qc.bed -a beds/neural_crest_NC2-_E2+_HH18.bed &gt; \
 beds_intersect/neural_crest_NC2-_E2+_HH18_intersect.bed
-bedtools intersect -v -a beds/all_qc.bed -b beds/neural_crest_NC2+_E2+_HH18.bed &gt; \
+bedtools intersect -v -b beds/all_qc.bed -a beds/neural_crest_NC2+_E2+_HH18.bed &gt; \
 beds_intersect/neural_crest_NC2+_E2+_HH18_intersect.bed
-bedtools intersect -v -a beds/all_qc.bed -b beds/neural_crest_E2+_HH12.bed &gt; \
+bedtools intersect -v -b beds/all_qc.bed -a beds/neural_crest_E2+_HH12.bed &gt; \
 beds_intersect/neural_crest_E2+_HH12_intersect.bed
-bedtools intersect -v -a beds/all_qc.bed -b beds/negative_control_NC2-_HH12.bed &gt; \
+bedtools intersect -v -b beds/all_qc.bed -a beds/negative_control_NC2-_HH12.bed &gt; \
 beds_intersect/negative_control_NC2-_HH12_intersect.bed
-bedtools intersect -v -a beds/all_qc.bed -b beds/neural_crest_NC2+_HH12_.bed &gt; \
+bedtools intersect -v -b beds/all_qc.bed -a beds/neural_crest_NC2+_HH12_.bed &gt; \
 beds_intersect/neural_crest_NC2+_HH12__intersect.bed
-bedtools intersect -v -a beds/all_qc.bed -b beds/non-neural_crest_8-10ss.bed &gt; \
+bedtools intersect -v -b beds/all_qc.bed -a beds/non-neural_crest_8-10ss.bed &gt; \
 beds_intersect/non-neural_crest_8-10ss_intersect.bed
-bedtools intersect -v -a beds/all_qc.bed -b beds/non-neural_crest_5-6ss.bed &gt; \
+bedtools intersect -v -b beds/all_qc.bed -a beds/non-neural_crest_5-6ss.bed &gt; \
 beds_intersect/non-neural_crest_5-6ss_intersect.bed
-bedtools intersect -v -a beds/all_qc.bed -b beds/neural_crest_8-10ss_FOXD3.bed &gt; \
-beds_intersect/neural_crest_8-10ss_FOXD3_intersect.bed
-bedtools intersect -v -a beds/all_qc.bed -b beds/epiblast_HH4.bed &gt; \
+bedtools intersect -v -b beds/all_qc.bed -a beds/epiblast_HH4.bed &gt; \
 beds_intersect/epiblast_HH4_intersect.bed
-bedtools intersect -v -a beds/all_qc.bed -b beds/metatarsal_skin_e12_retinoic_acid.bed &gt; \
+bedtools intersect -v -b beds/all_qc.bed -a beds/metatarsal_skin_e12_retinoic_acid.bed &gt; \
 beds_intersect/metatarsal_skin_e12_retinoic_acid_intersect.bed
-bedtools intersect -v -a beds/all_qc.bed -b beds/metatarsal_skin_e12_RCAS-GFP.bed &gt; \
+bedtools intersect -v -b beds/all_qc.bed -a beds/metatarsal_skin_e12_RCAS-GFP.bed &gt; \
 beds_intersect/metatarsal_skin_e12_RCAS-GFP_intersect.bed
-bedtools intersect -v -a beds/all_qc.bed -b beds/metatarsal_skin_e12_RCAS-CTNNB1.bed &gt; beds_intersect/metatarsal_skin_e12_RCAS-CTNNB1_intersect.bed
-bedtools intersect -v -a beds/all_qc.bed -b beds/keel_e10.bed &gt; \
+bedtools intersect -v -b beds/all_qc.bed -a beds/metatarsal_skin_e12_RCAS-bTNNB1.bed &gt; beds_intersect/metatarsal_skin_e12_RCAS-bTNNB1_intersect.bed
+bedtools intersect -v -b beds/all_qc.bed -a beds/keel_e10.bed &gt; \
 beds_intersect/keel_e10_intersect.bed
-bedtools intersect -v -a beds/all_qc.bed -b beds/hindlimb_e4.5.bed &gt; \
+bedtools intersect -v -b beds/all_qc.bed -a beds/hindlimb_e4.5.bed &gt; \
 beds_intersect/hindlimb_e4.5_intersect.bed
-bedtools intersect -v -a beds/all_qc.bed -b beds/full_sternum_e10.bed &gt; \
+bedtools intersect -v -b beds/all_qc.bed -a beds/full_sternum_e10.bed &gt; \
 beds_intersect/full_sternum_e10_intersect.bed
-bedtools intersect -v -a beds/all_qc.bed -b beds/inferior_sternum_e9.bed &gt; \
+bedtools intersect -v -b beds/all_qc.bed -a beds/inferior_sternum_e9.bed &gt; \
 beds_intersect/inferior_sternum_e9_intersect.bed
-bedtools intersect -v -a beds/all_qc.bed -b beds/forelimb_e4.5.bed &gt; \
+bedtools intersect -v -b beds/all_qc.bed -a beds/forelimb_e4.5.bed &gt; \
 beds_intersect/forelimb_e4.5_intersect.bed
-bedtools intersect -v -a beds/all_qc.bed -b beds/flight_muscle_e10.bed &gt; \
+bedtools intersect -v -b beds/all_qc.bed -a beds/flight_muscle_e10.bed &gt; \
 beds_intersect/flight_muscle_e10_intersect.bed
-bedtools intersect -v -a beds/all_qc.bed -b beds/flight_muscle_e9.bed &gt; \
+bedtools intersect -v -b beds/all_qc.bed -a beds/flight_muscle_e9.bed &gt; \
 beds_intersect/flight_muscle_e9_intersect.bed
-bedtools intersect -v -a beds/all_qc.bed -b beds/superior_sternum_e9.bed &gt; \
+bedtools intersect -v -b beds/all_qc.bed -a beds/superior_sternum_e9.bed &gt; \
 beds_intersect/superior_sternum_e9_intersect.bed
 
 #cat all the uniques into one and then add to main file
@@ -4040,8 +4033,7 @@ cat beds/all_qc.bed beds/all_uniques.bed | bedtools sort -i &quot;stdin&quot; &g
 <div id="annotate-atac-file" class="section level2" number="2.6">
 <h2><span class="header-section-number">2.6</span> Annotate atac
 file</h2>
-<p>To generate annotation we used bedtools annotate. neural_crest_8-10ss
-repeated only once (without treatment of FOXD3).</p>
+<p>To generate annotation we used bedtools annotate.</p>
 <pre class="bash"><code>#bash
 
 bedtools annotate -counts -i atac_all.bed -files \
@@ -4068,10 +4060,19 @@ beds/wing_bud_HH24.bed &gt; atac_all_annot.txt
 ATAC</h2>
 <p>To generate some statistics for annotated ATACseq file.</p>
 <pre class="r"><code>library(data.table)
-atac_data &lt;- fread(&quot;./files/atac_all_annot.txt&quot;)
+library(ggplot2)
+library(gridExtra)
+
+atac_data &lt;- fread(&quot;atac_all_annot.txt&quot;)
+
 atac_data$length &lt;- atac_data$Stop - atac_data$Start
 atac_data$length2 &lt;- atac_data$length
 atac_data$length2[which(atac_data$length &gt;= 2000)] &lt;- 2000
+
+#Drop elements not called in individual dataset
+atac_data$tissues &lt;- rowSums(atac_data[,4:39])
+atac_data &lt;- subset(atac_data, tissues &gt; 0)
+
 g1 &lt;- ggplot(atac_data, aes(x = atac_data$length2)) +
   geom_histogram(bins = 50) +
   theme_classic() +
@@ -4080,13 +4081,16 @@ g1 &lt;- ggplot(atac_data, aes(x = atac_data$length2)) +
   scale_x_continuous(limits = c(0,2000), expand = c(0, 0)) +
   scale_y_continuous(labels = function(x) format(x, scientific = FALSE), expand = expansion(mult = c(0, .1)))
 
-atac_data$tissues &lt;- rowSums(atac_data[,4:39])
 g2 &lt;- ggplot(atac_data, aes(x = atac_data$tissues)) +
   geom_histogram(bins = 36) +
   theme_classic() +
   labs(x=&quot;Shared ATACseq elements&quot;, y = &quot;Count&quot;)+
   scale_x_continuous(expand = c(0, 0)) +
-  scale_y_continuous(labels = function(x) format(x, scientific = FALSE), expand = expansion(mult = c(0, .1)))</code></pre>
+  scale_y_continuous(labels = function(x) format(x, scientific = FALSE), expand = expansion(mult = c(0, .1)))
+
+gs &lt;- arrangeGrob(g1, g2, ncol = 1)
+grid.arrange(gs)</code></pre>
+<p><img src="data:image/png;base64,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" width="672" /></p>
 <div id="relationship-of-loci" class="section level4" number="2.7.0.1">
 <h4><span class="header-section-number">2.7.0.1</span> Relationship of
 loci</h4>
