@@ -10,7 +10,7 @@
 
 
 
-<meta name="date" content="2023-01-05" />
+<meta name="date" content="2023-10-26" />
 
 <title>Selection</title>
 
@@ -2778,7 +2778,7 @@ font-size: 0.95em;
 
 
 <h1 class="title toc-ignore">Selection</h1>
-<h4 class="date">2023-01-05</h4>
+<h4 class="date">2023-10-26</h4>
 
 </div>
 
@@ -2793,8 +2793,8 @@ coding sequences and then run selection analysis</p>
 <p>This markdown file documents using TOGA to generate coding sequence
 alignments for the 78 species in our study and then using ABSREL to look
 for evidence of positive selection.</p>
-<p>We used the Hal file generated from cactus: see <a href="./cactus.html">cactus doc</a>. For the reference species we used
-Galgal7b refseq gff file: <a href="https://ftp.ncbi.nlm.nih.gov/genomes/refseq/vertebrate_other/Gallus_gallus/latest_assembly_versions/GCF_016699485.2_bGalGal1.mat.broiler.GRCg7b/GCF_016699485.2_bGalGal1.mat.broiler.GRCg7b_genomic.gff.gz">here</a></p>
+<p>We used the Hal file generated from cactus: see <a href="https://subirshakya.github.io/projects_rmarkdown/cactus.html">cactus
+doc</a>. For the reference species we used Galgal7b refseq gff file: <a href="https://ftp.ncbi.nlm.nih.gov/genomes/refseq/vertebrate_other/Gallus_gallus/latest_assembly_versions/GCF_016699485.2_bGalGal1.mat.broiler.GRCg7b/GCF_016699485.2_bGalGal1.mat.broiler.GRCg7b_genomic.gff.gz">here</a></p>
 </div>
 <div id="toga" class="section level1" number="2">
 <h1><span class="header-section-number">2</span> TOGA</h1>
@@ -2949,8 +2949,12 @@ chicken2 &lt;- chicken2[!duplicated(chicken2$gene),]
 
 write.table(chicken2[,c(1:153)], &quot;one2one_orthos.txt&quot;, sep = &quot;\t&quot;, row.names = F, col.names = T, quote = F)</code></pre>
 </div>
-<div id="gather-each-gene-in-a-single-fasta-file" class="section level2" number="3.3">
-<h2><span class="header-section-number">3.3</span> Gather each gene in a
+</div>
+<div id="run-selection-analysis" class="section level1" number="4">
+<h1><span class="header-section-number">4</span> Run Selection
+Analysis</h1>
+<div id="gather-each-gene-in-a-single-fasta-file" class="section level2" number="4.1">
+<h2><span class="header-section-number">4.1</span> Gather each gene in a
 single fasta file</h2>
 <p>We ended up with <em>10435</em> genes.</p>
 <pre class="python"><code>!usr/bin/python
@@ -3001,23 +3005,11 @@ def main():
 if __name__==&quot;__main__&quot;:
     main()                    </code></pre>
 </div>
-<div id="align-each-gene" class="section level2" number="3.4">
-<h2><span class="header-section-number">3.4</span> Align each gene</h2>
+<div id="align-each-gene" class="section level2" number="4.2">
+<h2><span class="header-section-number">4.2</span> Align each gene</h2>
 <p>We used macse v2 <span class="citation">(Ranwez et al. 2018)</span>
 to align genes.</p>
-<pre class="bash"><code>#!/bin/bash
-#SBATCH -J toga_macse
-#SBATCH -c 1
-#SBATCH -t 2-00:00
-#SBATCH -p shared,holy-smokes
-#SBATCH --mem=1000
-#SBATCH -o ./logs/macse_%a_%A.out
-#SBATCH -e ./logs/macse_%a_%A.err
-#SBATCH --array=0-110
-
-cd prot_align/
-
-files=( $(ls *.fasta) )
+<pre class="bash"><code>files=( $(ls *.fasta) )
 
 #Submits array jobs each with batches of 100 genes
 for ((i=${SLURM_ARRAY_TASK_ID}*100; i&lt;=(${SLURM_ARRAY_TASK_ID}*100)+99; i++)); do
@@ -3026,20 +3018,126 @@ for ((i=${SLURM_ARRAY_TASK_ID}*100; i&lt;=(${SLURM_ARRAY_TASK_ID}*100)+99; i++))
         sed -i &#39;s/\(&gt;[A-Za-z]*_[A-Za-z]*\).*/\1/g&#39; ../prot_align_macse/${files[${i}]}
 done</code></pre>
 </div>
-<div id="filter-alignments" class="section level2" number="3.5">
-<h2><span class="header-section-number">3.5</span> Filter
+<div id="filter-alignments" class="section level2" number="4.3">
+<h2><span class="header-section-number">4.3</span> Filter
 alignments</h2>
 <p>We used the filtering code <a href="https://github.com/gwct/murine-discordance/blob/main/scripts/03-selection-tests/08_aln_filter.py">(see
 here)</a> to filter alignments of misalinged and problematic codons. We
 ended up with 9854 genes.</p>
 <pre class="bash"><code>#bash
-python aln_filter.py -i prot_align_macse/ -n 10 -o prot_align_macse_filt --overwrite
+python aln_filter.py -i prot_align_macse/ -n 10 -o prot_align_macse_filt --overwrite</code></pre>
+</div>
+<div id="mask-bad-codons" class="section level2" number="4.4">
+<h2><span class="header-section-number">4.4</span> Mask bad codons</h2>
+<p>We used HMMCleaner <span class="citation">(Franco et al.
+2019)</span>, to mask codons that are potentially the result of bad
+assemblies.</p>
+<pre class="bash"><code>#bash
+files=( $(ls ../prot_align_macse_filt-spec10-seq20-site50/cds/*.fasta) )
+
+for ((i=${SLURM_ARRAY_TASK_ID}*100; i&lt;=(${SLURM_ARRAY_TASK_ID}*100)+99; i++)); do
+        echo ${files[${i}]}
+        fbname=$(basename &quot;$1&quot; .fasta)
+        HmmCleaner.pl -costs -0.25 -0.20 0.15 0.45 ${files[${i}]}
+        mv ../prot_align_macse_filt-spec10-seq20-site50/cds/${fbname}_hmm.fasta ./
+done</code></pre>
+</div>
+<div id="run-abserel" class="section level2" number="4.5">
+<h2><span class="header-section-number">4.5</span> Run aBSEREL</h2>
+<p>We ran aBSEREL <span class="citation">(Smith et al. 2015)</span> for
+each gene alignment using a synonymous rate variation model. An custom
+R-script was used to prune input tree to match the taxa present in each
+alignment.</p>
+<pre class="bash"><code>files=( $(ls ../prot_align_hmm/*.fasta) )
+
+for ((i=${SLURM_ARRAY_TASK_ID}*10; i&lt;=(${SLURM_ARRAY_TASK_ID}*10)+9; i++)); do
+        echo ${files[${i}]}
+        fbname=$(basename ${files[$i]} .fasta)
+        Rscript tree_format.Rscript macro_tree_node.txt prot_align_hmm/${fbname}.fasta trees/$fbname
+        hyphy absrel --alignment prot_align_hmm/${fbname}.fasta --tree trees/${fbname}.txt \
+            --output output_hmm/${fbname}_SRV.JSON --srv Yes
+done</code></pre>
+<pre class="r"><code>#R script to subset taxa in tree to match fasta file
+args &lt;- commandArgs(trailingOnly = TRUE)
+
+library(ape)
+tree &lt;- read.tree(args[1])
+fasta &lt;- read.FASTA(args[2])
+tree2 &lt;- keep.tip(tree, intersect(names(fasta), tree$tip.label))
+write.tree(tree2, paste(args[3], &quot;.txt&quot;, sep=&quot;&quot;))</code></pre>
+</div>
+<div id="parse-absrel-results" class="section level2" number="4.6">
+<h2><span class="header-section-number">4.6</span> Parse aBSREL
+results</h2>
+<p>Parse out aBSREL results and find branches selected among the four
+focal groups.</p>
+<pre class="python"><code>!usr/bin/python
+
+import json
+import argparse
+import pandas as pd
+from functools import reduce
+
+def count_targets(species):
+    bulbul = set([&quot;Pycnonotus_jocosus&quot;, &quot;Brachypodius_atriceps&quot;, &quot;Anc33&quot;])
+    penguin = set([&quot;Aptenodytes_patagonicus&quot;, &quot;Aptenodytes_forsteri&quot;, &quot;Pygoscelis_adeliae&quot;,
+                 &quot;Pygoscelis_papua&quot;, &quot;Pygoscelis_antarcticus&quot;, &quot;Megadyptes_antipodes&quot;,
+                 &quot;Eudyptula_novaehollandiae&quot;, &quot;Eudyptula_albosignata&quot;, &quot;Eudyptula_minor&quot;,
+                 &quot;Spheniscus_demersus&quot;, &quot;Spheniscus_humboldti&quot;, &quot;Spheniscus_magellanicus&quot;,
+                 &quot;Eudyptes_pachyrhynchus&quot;, &quot;Eudyptes_sclateri&quot;, &quot;Eudyptes_chrysolophus&quot;,
+                 &quot;Eudyptes_schlegeli&quot;, &quot;Eudyptes_chrysocome&quot;, &quot;Eudyptes_filholi&quot;,
+                 &quot;Eudyptes_moseleyi&quot;, &quot;Anc56&quot;, &quot;Anc58&quot;, &quot;Anc60&quot;, &quot;Anc63&quot;, &quot;Anc65&quot;,
+                 &quot;Anc68&quot;, &quot;Anc69&quot;, &quot;Anc48&quot;, &quot;Anc59&quot;, &quot;Anc62&quot;, &quot;Anc64&quot;, &quot;Anc67&quot;,
+                 &quot;Anc57&quot;, &quot;Anc61&quot;, &quot;Anc66&quot;, &quot;Anc55&quot;, &quot;Anc54&quot;, &quot;Anc53&quot;, &quot;Anc52&quot;])
+    kingfisher = set([&quot;Chloroceryle_aenea&quot;, &quot;Actenoides_hombroni&quot;, &quot;Halcyon_senegalensis&quot;,
+                    &quot;Anc46&quot;, &quot;Anc45&quot;])
+    swallow = set([&quot;Hirundo_rustica&quot;, &quot;Progne_subis&quot;, &quot;Riparia_riparia&quot;,
+                    &quot;Anc34&quot;, &quot;Anc35&quot;])
+    input_list = set(species)
+    return(len(input_list &amp; bulbul), len(input_list &amp; penguin), len(input_list &amp; kingfisher), len(input_list &amp; swallow))
+
+def absrel_out(args):
+    genes = pd.read_table(args.gene_list, header=None, names=[&quot;gene_name&quot;])
+    genes[[&quot;AIC_SRV&quot;, &quot;nsel_SRV&quot;, &quot;bulbul&quot;, &quot;penguin&quot;, &quot;kingfisher&quot;, &quot;swallow&quot;, &quot;targets&quot;, &quot;taxa&quot;]] = &#39;&#39;
+
+    for idx in range(len(genes)):
+        jfile = json.load(open(args.input_folder + genes.loc[idx][&quot;gene_name&quot;] + &quot;_SRV&quot; + &quot;.JSON&quot;, &#39;r&#39;))
+        genes.loc[idx][&quot;AIC_SRV&quot;] = round(jfile[&quot;fits&quot;][&quot;Full adaptive model&quot;][&quot;AIC-c&quot;], 1)
+        genes.loc[idx][&quot;nsel_SRV&quot;] = jfile[&quot;test results&quot;][&quot;positive test results&quot;]
+        if jfile[&quot;test results&quot;][&quot;positive test results&quot;] &gt; 0:
+            selected = set()
+            for k in jfile[&quot;branch attributes&quot;][&quot;0&quot;].keys():
+                if jfile[&quot;branch attributes&quot;][&quot;0&quot;][k][&quot;Corrected P-value&quot;] &lt; 0.05:
+                    selected.add(k)
+            genes.loc[idx][&quot;taxa&quot;] = reduce(lambda x, y: str(x) + &quot;,&quot; + str(y), selected)
+            genes.loc[idx][&quot;bulbul&quot;], genes.loc[idx][&quot;penguin&quot;], genes.loc[idx][&quot;kingfisher&quot;], genes.loc[idx][&quot;swallow&quot;] = count_targets(selected)
+            genes.loc[idx][&quot;targets&quot;] = genes.loc[idx][&quot;bulbul&quot;] + genes.loc[idx][&quot;penguin&quot;] + genes.loc[idx][&quot;kingfisher&quot;] + genes.loc[idx][&quot;swallow&quot;]
+    return genes
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument(&quot;-i&quot;, &quot;--input_folder&quot;, type=str, help=&quot;Input folder with JSON outputs&quot;)
+    parser.add_argument(&quot;-g&quot;, &quot;--gene_list&quot;, type=str, help=&quot;Names of JSON files&quot;)
+    parser.add_argument(&quot;-o&quot;, &quot;--output&quot;, type=str, help=&quot;Output file name&quot;)
+
+    args = parser.parse_args()
+    output = absrel_out(args)
+    output.to_csv(args.output+&quot;.txt&quot;, sep=&quot;\t&quot;, index=False)
+
+if __name__==&quot;__main__&quot;:
+    main()
 </code></pre>
 </div>
 </div>
 <div id="references" class="section level1 unnumbered">
 <h1 class="unnumbered">References</h1>
 <div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-hmmclean2019" class="csl-entry">
+Franco, Arnaud Di, Raphaël Poujol, Denis Baurain, and Hervé Philippe.
+2019. <span>“Evaluating the Usefulness of Alignment Filtering Methods to
+Reduce the Impact of Errors on Evolutionary Inferences.”</span> <em>BMC
+Evolutionary Biology</em> 19 (January): 1–17. <a href="https://doi.org/10.1186/S12862-019-1350-2/FIGURES/6">https://doi.org/10.1186/S12862-019-1350-2/FIGURES/6</a>.
+</div>
 <div id="ref-kirilenko2023toga" class="csl-entry">
 Kirilenko, Bogdan M, Chetan Munegowda, Ekaterina Osipova, David Jebb,
 Virag Sharma, Moritz Blumer, Ariadna E Morales, et al. 2023.
@@ -3051,6 +3149,13 @@ Ranwez, Vincent, Emmanuel JP Douzery, Cédric Cambon, Nathalie Chantret,
 and Frédéric Delsuc. 2018. <span>“MACSE V2: Toolkit for the Alignment of
 Coding Sequences Accounting for Frameshifts and Stop Codons.”</span>
 <em>Molecular Biology and Evolution</em> 35 (10): 2582–84.
+</div>
+<div id="ref-Smith2015" class="csl-entry">
+Smith, Martin D., Joel O. Wertheim, Steven Weaver, Ben Murrell, Konrad
+Scheffler, and Sergei L. Kosakovsky Pond. 2015. <span>“Less Is More: An
+Adaptive Branch-Site Random Effects Model for Efficient Detection of
+Episodic Diversifying Selection.”</span> <em>Molecular Biology and
+Evolution</em> 32 (May): 1342–53. <a href="https://doi.org/10.1093/molbev/msv022">https://doi.org/10.1093/molbev/msv022</a>.
 </div>
 </div>
 </div>
