@@ -1,5 +1,5 @@
 # Overview 
-This is a Gihub Repository of Published Papers. This includes Rmarkdown documenting and annotating all the methods used in the papers.
+This is a Gihub Repository for Published Papers. This includes Rmarkdown files documenting and annotating all the methods used in the respective papers.
 
 # Papers
 ## Shakya et al. (Journal, Date)
