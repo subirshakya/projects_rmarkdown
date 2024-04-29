@@ -10,7 +10,7 @@
 
 
 
-<meta name="date" content="2023-03-28" />
+<meta name="date" content="2024-04-29" />
 
 <title>Generating Conserved Elements</title>
 
@@ -2778,7 +2778,7 @@ font-size: 0.95em;
 
 
 <h1 class="title toc-ignore">Generating Conserved Elements</h1>
-<h4 class="date">2023-10-23</h4>
+<h4 class="date">2024-04-29</h4>
 
 </div>
 
@@ -3160,7 +3160,7 @@ infile &lt;- infile[which(infile$size &lt;= 5000 &amp; infile$size &gt;= 20),]
 infile$ID &lt;- paste(&quot;ce&quot;, seq(1, nrow(infile)), sep = &quot;&quot;)
 write.table(infile[,c(1:3,5)], &quot;final_working_conserved_filt.bed&quot;, 
             sep = &quot;\t&quot;, row.names = F, col.names = F, quote = F)</code></pre>
-<p>This final working file has 1,173,902 elements.</p>
+<p>This final working file has 1,117,392 elements.</p>
 </div>
 <div id="annotating-the-working-file" class="section level1" number="5">
 <h1><span class="header-section-number">5</span> Annotating the working
@@ -3349,7 +3349,7 @@ write.table(final_data, &quot;conserved_elements_all.txt&quot;, sep = &quot;\t&q
 </div>
 <div id="final-statistics" class="section level1" number="6">
 <h1><span class="header-section-number">6</span> Final Statistics</h1>
-<p>The final dataset consists of 1,173,902 elements. The table contains
+<p>The final dataset consists of 1,117,392 elements. The table contains
 the following elements:</p>
 <table>
 <colgroup>
@@ -3696,8 +3696,8 @@ bedtools intersect -wao -a final_data_filtered.bed -b 241-mammalian_hg38-galgal7
 <pre class="r"><code>#R
 library(dplyr)
 library(ggplot2)
-final_data &lt;- read.table(&quot;C:/Subir/Projects/cactus/phyloacc/final_dataset/final_data_filtered.txt&quot;, sep = &quot;\t&quot;, header=T)
-overlap &lt;- read.table(&quot;C:/Subir/Projects/cactus/phyloacc/363_birds/final_data_filtered_hg38.bed&quot;, sep = &quot;\t&quot;, header = F)
+final_data &lt;- read.table(&quot;final_data_filtered.txt&quot;, sep = &quot;\t&quot;, header=T)
+overlap &lt;- read.table(&quot;final_data_filtered_hg38.bed&quot;, sep = &quot;\t&quot;, header = F)
 overlap_sum &lt;- aggregate(V8 ~ V4, data=overlap, FUN = sum)
 final_data &lt;- merge(final_data, overlap_sum, by.x=&quot;id&quot;, by.y=&quot;V4&quot;)
 final_data$frac_conserved_mammal &lt;- final_data$V8/final_data$length
