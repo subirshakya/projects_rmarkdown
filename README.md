@@ -13,4 +13,7 @@ The files for the relevant sections are listed below for the paper:
 * [**Selection analysis**](https://subirshakya.github.io/projects_rmarkdown/selection.html)
 
 # Workshops
-## Genome alignments using ProgressiveCactus and running PhyloAcc: (Harvard, Aug 2024) [**link**](https://subirshakya.github.io/projects_rmarkdown/genome_workshop.html)
+## Harvard, Aug 2024 
+Genome alignments using ProgressiveCactus and running PhyloAcc: (Harvard, Aug 2024) 
+
+[**link**](https://subirshakya.github.io/projects_rmarkdown/genome_workshop.html)
