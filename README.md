@@ -14,6 +14,6 @@ The files for the relevant sections are listed below for the paper:
 
 # Workshops
 ## Harvard, Aug 2024 
-Genome alignments using ProgressiveCactus and running PhyloAcc: (Harvard, Aug 2024) 
 
-[**link**](https://subirshakya.github.io/projects_rmarkdown/genome_workshop.html)
+* Genome alignments using ProgressiveCactus and running PhyloAcc: (Harvard, Aug 2024) 
+  [**link**](https://subirshakya.github.io/projects_rmarkdown/genome_workshop.html)
