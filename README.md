@@ -11,3 +11,6 @@ The files for the relevant sections are listed below for the paper:
 * [**ATAC-seq analysis**](https://subirshakya.github.io/projects_rmarkdown/ATAC.html)
 * [**PhyloAcc analysis**](https://subirshakya.github.io/projects_rmarkdown/phyloacc_filt.html)
 * [**Selection analysis**](https://subirshakya.github.io/projects_rmarkdown/selection.html)
+
+# Workshops
+## Genome alignments using ProgressiveCactus and running PhyloAcc: (Harvard, Aug 2024) [**link**](https://subirshakya.github.io/projects_rmarkdown/genome_workshop.html)
