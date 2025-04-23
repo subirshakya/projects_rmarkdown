@@ -2,7 +2,7 @@
 This is a Gihub Repository for Published Papers. This includes Rmarkdown files documenting and annotating all the methods used in the respective papers.
 
 # Papers
-## Shakya et al. (Journal, Date)
+## Shakya, S.B., Edwards, S.V. & Sackton, T.B. Convergent evolution of noncoding elements associated with short tarsus length in birds. BMC Biol 23, 52 (2025). https://doi.org/10.1186/s12915-025-02156-4
 The files for the relevant sections are listed below for the paper: 
 
 * [**Cactus alignment**](https://subirshakya.github.io/projects_rmarkdown/cactus.html)
@@ -11,6 +11,10 @@ The files for the relevant sections are listed below for the paper:
 * [**ATAC-seq analysis**](https://subirshakya.github.io/projects_rmarkdown/ATAC.html)
 * [**PhyloAcc analysis**](https://subirshakya.github.io/projects_rmarkdown/phyloacc_filt.html)
 * [**Selection analysis**](https://subirshakya.github.io/projects_rmarkdown/selection.html)
+
+## Shakya, S.B. et al. Genomic Associations of Skeletal Shape Variation in Waterfowl Limbs
+
+* [**Duck analysis**](https://subirshakya.github.io/projects_rmarkdown/duck_phyloacc.html)
 
 # Workshops
 ## Harvard, Aug 2024 
