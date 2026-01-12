@@ -12,7 +12,7 @@ The files for the relevant sections are listed below for the paper:
 * [**PhyloAcc analysis**](https://subirshakya.github.io/projects_rmarkdown/phyloacc_filt.html)
 * [**Selection analysis**](https://subirshakya.github.io/projects_rmarkdown/selection.html)
 
-## Shakya, S.B. et al. Genomic Associations of Skeletal Shape Variation in Waterfowl Limbs
+## Shakya, S.B. et al. Genetic Associations of Convergence in Skeletal Shape Variation in Waterfowl Limbs
 
 * [**Duck analysis**](https://subirshakya.github.io/projects_rmarkdown/duck_phyloacc.html)
 
